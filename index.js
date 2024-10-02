@@ -18,26 +18,39 @@ app.get('/params/:id', (req, res) =>{
     res.send(id)
 })
 
+// Cadastrar usuário no array
 app.post('/cadastrar', (req, res) => {
     const { name, age} = req.body
-    personList.push({name, age})
-    res.send(`Usuário recebido!!! nome do usuário ${name}`)
+    const id = personList.length
+    personList.push({id, name, age})
+    res.send(`Usuário recebido!!!\nID: ${id}\n nome do usuário ${name}, \nidade: ${age}`)
 })
 
-app.delete('/deletar', (req, res) =>{
-    const {name, age} = req.body
-    personList.pop()
-    res.send(`Usuário deletado com sucesso! ${name}`)
+// Deletar usuário do array
+app.delete('/deletar/:id', (req, res) => {
+    const {id} = req.params
+    if (personList[id -1]){
+        personList.splice(id -1, 1)
+        res.send('Usuário deletado com sucesso!')
+    }else{
+        res.status(404).send('Usuário não encontrado!')
+    }
 })
 
-app.put('/update', (req, res) =>{
+
+// Atualizar array
+app.put('/atualizar/:id', (req, res) =>{
+    const {id} = req.params
     const{name, age} = req.body
-    personList.put()
-    res.send(`Dados atualizados com sucesso! ${name}`)
+    try{
+    personList[id -1] = {id, name, age}
+    res.send(`Dados atualizados com sucesso! ${id}\nNome: ${name} \nIdade: ${age}`)
+    }catch(err){
+        res.send(`Usuário não encontrado`)
+    }
 })
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
 
-console.log("oii")
